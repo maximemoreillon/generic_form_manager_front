@@ -52,6 +52,9 @@
 
         </table>
       </template>
+      <div class="" v-else>
+        No fields yet
+      </div>
 
 
       <h2>Responses</h2>
@@ -142,9 +145,6 @@ table {
 }
 table tr:not(:last-child) {
   border-bottom: 1px solid #dddddd;
-}
-table tr:first-child {
-  border-bottom: 1px solid black;
 }
 table th, table td {
   padding: 0.25em;
