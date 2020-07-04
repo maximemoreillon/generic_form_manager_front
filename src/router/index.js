@@ -1,14 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
 
   const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name: 'form_list',
+    component: () => import(/* webpackChunkName: "about" */ '../views/FormList.vue')
   },
   {
     path: '/form',
@@ -16,9 +15,19 @@ Vue.use(VueRouter)
     component: () => import(/* webpackChunkName: "about" */ '../views/Form.vue')
   },
   {
+    path: '/form_dashboard',
+    name: 'form_dashboard',
+    component: () => import(/* webpackChunkName: "about" */ '../views/FormDashboard.vue')
+  },
+  {
     path: '/form_builder',
     name: 'form_builder',
     component: () => import(/* webpackChunkName: "about" */ '../views/FormBuilder.vue')
+  },
+  {
+    path: '/success',
+    name: 'success',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Success.vue')
   }
 ]
 

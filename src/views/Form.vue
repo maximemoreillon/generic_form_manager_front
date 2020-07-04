@@ -1,44 +1,43 @@
 <template>
   <div class="home">
 
-
     <template v-if="form">
+
       <h1 >{{form.name}}</h1>
-      <h2>Form info</h2>
-      <div class="">
-        ID: {{form._id}}
-      </div>
 
-      <h2>Fields</h2>
-      <router-link :to="{ name: 'form_builder', query: {id: $route.query.id} }">Form builder</router-link>
 
-      <h2>Responses</h2>
-      <template v-if="responses.length > 0">
+      <template v-if="form.fields">
 
-        <table class="responses_table">
-          <tr>
-            <th
-              v-for="key in response_keys"
-              v-bind:key="key">{{key}}</th>
-          </tr>
-          <tr
-            v-for="response in responses"
-            v-bind:key="response._id">
-            <td
-              v-for="key in response_keys"
-              v-bind:key="`${response._id}_${key}`">
-              {{response[key]}}
-            </td>
-          </tr>
+        <form class="" ref="form" @submit.prevent="submit()">
+          <table class="">
+            <tr
+              v-for="(field,i) in form.fields"
+              v-bind:key="`field_${i}`">
 
-        </table>
+              <td>{{field.label}}</td>
+              <td>
+                <input
+                  :type="field.type"
+                  :placeholder="field.label"
+                  v-model="field.response"
+                  :name="field.label">
+              </td>
+
+            </tr>
+            <tr>
+              <td colspan="2">
+                <input type="submit">
+              </td>
+
+            </tr>
+
+          </table>
+        </form>
+
+
       </template>
 
     </template>
-
-
-
-
 
 
   </div>
@@ -55,8 +54,6 @@ export default {
   data(){
     return {
       form: null,
-      responses: [],
-      response_keys: [],
     }
   },
   mounted(){
@@ -68,46 +65,42 @@ export default {
       this.axios.get(url)
       .then((response) => {
         this.form = response.data
-        this.get_all_responses()
       })
       .catch((error) => console.log(error))
     },
-    get_all_responses() {
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.form._id}/responses`
-      this.axios.get(url)
-      .then((response) => {
-        this.responses = []
-        response.data.forEach((item) => {
-          this.responses.push(item)
+    submit(){
 
-          // Save all the keys
-          let ignored_keys = ['form_id', '_id']
-          Object.keys(item).forEach((key) => {
-            if(!this.response_keys.includes(key) && !ignored_keys.includes(key)) {
-              this.response_keys.push(key)
-            }
-          })
-        })
+      // Building the request vody (dirty)
+      let body = {}
+      this.form.fields.forEach( (field) => {
+        body[field.label] = field.response
+      })
+
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}/responses`
+      this.axios.post(url,body)
+      .then(() => {
+        this.$router.push({name: 'success'})
       })
       .catch((error) => console.log(error))
+
+
     }
+
   },
 
 }
 </script>
 
 <style scoped>
-.responses_table {
+table {
   border-collapse: collapse;
-  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
-.responses_table tr:not(:last-child) {
+table tr:not(:last-child) {
   border-bottom: 1px solid #dddddd;
 }
-.responses_table tr:first-child {
-  border-bottom: 1px solid black;
-}
-.responses_table th, .responses_table td {
+table th, table td {
   padding: 0.25em;
 }
 </style>

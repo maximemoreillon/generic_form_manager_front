@@ -1,24 +1,47 @@
 <template>
   <div class="form_builder">
+    <h1>Form builder</h1>
+    <template v-if="form">
 
-    <button type="button" @click="add_field">Add field</button>
+      <div class="">
+        Form ID: {{form._id}}
+      </div>
 
-    <div
-      class="field"
-      v-for="(field, i) in fields"
-      v-bind:key="i">
+      <h2>Fields</h2>
 
-      <input type="text" v-model="field.label" placeholder="Label">
-      <select class="" v-model="field.type">
-        <option value="text">Text</option>
-        <option value="checkbox">checkbox</option>
-      </select>
+      <div class="">
+        <button type="button" @click="add_field">Add field</button>
+      </div>
 
-      <!-- Delete the field -->
-      <button type="button" @click="remove_field(i)">Bye</button>
-    </div>
+      <div class="">
+        <div
+          class="field"
+          v-for="(field, i) in form.fields"
+          v-bind:key="i">
 
-    <button type="button" @click="submit()">Update form</button>
+          <input type="text" v-model="field.label" placeholder="Label">
+          <select class="" v-model="field.type">
+            <option value="text">Text</option>
+            <option value="checkbox">checkbox</option>
+          </select>
+
+          <!-- Delete the field -->
+
+          <button type="button" @click="remove_field(i)">Bye</button>
+        </div>
+      </div>
+
+
+
+
+      <div class="">
+        <button type="button" @click="submit()">Update form</button>
+      </div>
+
+
+    </template>
+
+
 
 
 
@@ -43,24 +66,41 @@ export default {
   },
   data(){
     return {
-      fields: []
+      form: null,
     }
   },
   mounted(){
+    this.get_form()
   },
   methods: {
     add_field(){
+
+      if(!this.form.fields) this.$set(this.form,'fields',[])
+
       let new_field = {
         label: '',
         type: 'text',
       }
-      this.fields.push(new_field)
+      this.form.fields.push(new_field)
     },
     remove_field(index) {
-      this.fields.splice(index, 1)
+      this.form.fields.splice(index, 1)
+    },
+    get_form() {
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
+      this.axios.get(url)
+      .then((response) => {
+        this.form = response.data
+      })
+      .catch((error) => console.log(error))
     },
     submit(){
-      alert('not implemented')
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
+      this.axios.put(url,this.form)
+      .then(() => {
+        this.$router.push({name:'form',query:{id:this.$route.query.id}})
+      })
+      .catch((error) => console.log(error))
     }
 
 
@@ -70,17 +110,5 @@ export default {
 </script>
 
 <style scoped>
-.responses_table {
-  border-collapse: collapse;
-  width: 100%;
-}
-.responses_table tr:not(:last-child) {
-  border-bottom: 1px solid #dddddd;
-}
-.responses_table tr:first-child {
-  border-bottom: 1px solid black;
-}
-.responses_table th, .responses_table td {
-  padding: 0.25em;
-}
+
 </style>

@@ -3,7 +3,7 @@
     <CreateNewForm/>
 
     <router-link
-      :to="{ name: 'form', query: {id: form._id} }"
+      :to="{ name: 'form_dashboard', query: {id: form._id} }"
       v-for="form in forms"
       v-bind:key="form._id"
       class="form">
