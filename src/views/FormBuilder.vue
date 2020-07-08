@@ -42,12 +42,13 @@
             <button
               type="button"
               @click="remove_field(i)">
-              Bye
+              Remove field
             </button>
           </td>
 
         </tr>
 
+        <!-- Add a field button -->
         <tr>
           <td colspan="3">
             <button
@@ -68,12 +69,16 @@
         <button type="button" @click="submit()">Update form</button>
       </div>
 
-      <h2>HTML sample</h2>
-      <pre>
-        <code>
-          {{html_sample}}
-        </code>
-      </pre>
+      <template v-if="form.fields">
+        <h2>HTML sample</h2>
+        <pre>
+          <code>
+            {{html_sample}}
+          </code>
+        </pre>
+      </template>
+
+
 
 
     </template>
@@ -158,8 +163,7 @@ export default {
             <input type="submit">
           </form>
         </body>
-      </html>
-      `
+      </html>`
     }
   }
 

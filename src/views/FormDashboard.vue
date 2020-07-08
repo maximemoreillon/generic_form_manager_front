@@ -14,8 +14,9 @@
           <td>Author</td>
           <td>{{form.author_id}}</td>
         </tr>
-
       </table>
+
+      <button type="button" @click="delete_form()">Delete form</button>
 
       <h2>Fields</h2>
       <!-- Link to Form Builder -->
@@ -58,7 +59,7 @@
 
 
       <h2>Responses</h2>
-      <template v-if="responses.length > 0">
+      <template v-if="form.responses">
 
         <table class="responses_table">
           <tr>
@@ -67,7 +68,7 @@
               v-bind:key="key">{{key}}</th>
           </tr>
           <tr
-            v-for="response in responses"
+            v-for="response in form.responses"
             v-bind:key="response._id">
             <td
               v-for="key in response_keys"
@@ -78,6 +79,9 @@
 
         </table>
       </template>
+      <div class="" v-else>
+        No responses yet
+      </div>
 
     </template>
 
@@ -96,8 +100,8 @@ export default {
   data(){
     return {
       form: null,
-      responses: [],
       response_keys: [],
+      loading: false,
     }
   },
   mounted(){
@@ -105,35 +109,35 @@ export default {
   },
   methods: {
     get_form() {
+      this.loading = true
       let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
       this.axios.get(url)
       .then((response) => {
         this.form = response.data
-        this.get_all_responses()
+
+        // Save all the keys
+        if(this.form.responses){
+          this.form.responses.forEach((item) => {
+            let ignored_keys = ['form_id', '_id']
+            Object.keys(item).forEach((key) => {
+              if(!this.response_keys.includes(key) && !ignored_keys.includes(key)) {
+                this.response_keys.push(key)
+              }
+            })
+          })
+        }
       })
+      .catch((error) => console.log(error))
+      .finally(() => this.loading = false)
+    },
+    delete_form() {
+      if(!confirm('ホンマ？')) return
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
+      this.axios.delete(url)
+      .then(() => { this.$router.push({name: 'form_list'}) })
       .catch((error) => console.log(error))
     },
-    get_all_responses() {
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.form._id}/responses`
-      this.axios.get(url)
-      .then((response) => {
-        this.responses = []
-        response.data.forEach((item) => {
-          this.responses.push(item)
-
-          // Save all the keys
-          let ignored_keys = ['form_id', '_id']
-          Object.keys(item).forEach((key) => {
-            if(!this.response_keys.includes(key) && !ignored_keys.includes(key)) {
-              this.response_keys.push(key)
-            }
-          })
-        })
-      })
-      .catch((error) => console.log(error))
-    }
   },
-
 }
 </script>
 

@@ -28,6 +28,11 @@ Vue.use(VueRouter)
     path: '/success',
     name: 'success',
     component: () => import(/* webpackChunkName: "about" */ '../views/Success.vue')
+  },
+  {
+    path: '/create_form',
+    name: 'create_form',
+    component: () => import(/* webpackChunkName: "about" */ '../views/CreateForm.vue')
   }
 ]
 

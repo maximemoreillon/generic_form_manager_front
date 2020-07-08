@@ -1,0 +1,25 @@
+stages:
+  - containerization
+  - deployment
+
+variables:
+  APPLICATION_NAME: generic-form-manager-front
+
+containerization:
+  stage: containerization
+  script:
+    - docker build -t ${CONTAINER_REGISTRY}/${APPLICATION_NAME} .
+    - docker push ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
+
+deployment:
+  stage: deployment
+  script:
+    # create/update the deployment
+    - envsubst < deployment.yml | kubectl apply -f -
+    # Pull latest image of deployment
+    - kubectl rollout restart deployment/${APPLICATION_NAME}
+  environment:
+    name: production
+    kubernetes:
+      # Obtained from GitLab
+      namespace: ${KUBERNETES_NAMESPACE}

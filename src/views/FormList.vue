@@ -1,12 +1,17 @@
 <template>
   <div class="home">
-    <CreateNewForm/>
+
+    <h1>My forms</h1>
+    <p>Click <router-link :to="{ name: 'create_form'}">here</router-link> to create a new form</p>
+
+
 
     <router-link
+      class="form"
       :to="{ name: 'form_dashboard', query: {id: form._id} }"
       v-for="form in forms"
       v-bind:key="form._id"
-      class="form">
+      >
       {{form.name}}
     </router-link>
 
@@ -19,12 +24,11 @@
 
 <script>
 // @ is an alias to /src
-import CreateNewForm from '@/components/CreateNewForm.vue'
 
 export default {
-  name: 'Home',
+  name: 'FormList',
   components: {
-    CreateNewForm
+
   },
   data(){
     return {
@@ -49,3 +53,18 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.form {
+  display: block;
+  padding: 0.25em;
+  border: 1px solid #dddddd;
+  color: currentcolor;
+  text-decoration: none;
+  margin: 0.25em 0;
+}
+
+.form:hover {
+  background-color: #eeeeee;
+}
+</style>
