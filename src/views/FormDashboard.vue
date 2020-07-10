@@ -19,7 +19,7 @@
         </tr>
 
         <tr>
-          <td>API URL:</td>
+          <td>API URL</td>
           <td>
             <input
               class="api_url"
@@ -34,6 +34,22 @@
 
       <h2>Fields</h2>
       <!-- Link to Form Builder -->
+      <p class="">
+        <router-link
+          :to="{ name: 'form_builder', query: {id: $route.query.id} }">
+          Form builder
+        </router-link>
+      </p>
+
+      <p class="">
+        <label>Publishable form URL: </label>
+        <input
+          class="url"
+          type="text"
+          readonly
+          :value="publishable_form_url">
+
+      </p>
 
 
 
@@ -44,12 +60,29 @@
           <tr>
             <th>Label</th>
             <th>Type</th>
+            <th>Options</th>
           </tr>
           <tr
-            v-for="(field,i) in form.fields"
-            v-bind:key="`field_${i}`">
-            <td>{{field.label}}</td>
+            v-for="(field,field_index) in form.fields"
+            v-bind:key="`field_${field_index}`">
+            <td>{{field.label || '-'}}</td>
             <td>{{field.type}}</td>
+            <td>
+              <table v-if="field.type==='select'">
+                <tr>
+                  <th>Label</th>
+                  <th>value</th>
+                </tr>
+                <tr
+                  v-for="(option, option_index) in field.options"
+                  v-bind:key="`field_${field_index}_option${option_index}`">
+                  <td>{{option.label || '-'}}</td>
+                  <td>{{option.value || '-'}}</td>
+
+                </tr>
+              </table>
+              <span v-else>-</span>
+            </td>
           </tr>
 
         </table>
@@ -58,19 +91,9 @@
         No fields yet
       </div>
 
-      <div class="">
-        <router-link
-          :to="{ name: 'form_builder', query: {id: $route.query.id} }">
-          Form builder
-        </router-link>
-      </div>
 
-      <div class="">
-        <router-link
-          :to="{ name: 'form', query: {id: $route.query.id} }">
-          Publishable form
-        </router-link>
-      </div>
+
+
 
 
       <h2>Responses</h2>
@@ -179,22 +202,32 @@ export default {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
-
       }
       return new Date(date).toLocaleString('ja-JP',options)
-    }
+    },
+
   },
+  computed: {
+    publishable_form_url() {
+      return `${window.location.origin}/form?id=${this.form._id}`
+    }
+  }
 }
 </script>
 
 <style scoped>
 table {
+  width: 100%;
   border-collapse: collapse;
   margin-left: auto;
   margin-right: auto;
 }
 table tr:not(:last-child) {
   border-bottom: 1px solid #dddddd;
+}
+
+table tr:hover{
+  background-color: #eeeeee;
 }
 table th, table td {
   padding: 0.25em;

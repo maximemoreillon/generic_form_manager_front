@@ -12,8 +12,16 @@
       v-for="form in forms"
       v-bind:key="form._id">
 
+      <span class="date">
+        {{format_date(form.date)}}
+      </span>
+
       <span class="name">
         {{form.name}}
+      </span>
+
+      <span class="responses">
+        Responses: {{form.responses.length}}
       </span>
 
     </router-link>
@@ -52,6 +60,14 @@ export default {
         })
       })
       .catch((error) => console.log(error))
+    },
+    format_date(date){
+      let options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }
+      return new Date(date).toLocaleString('ja-JP',options)
     }
   }
 }
@@ -60,6 +76,7 @@ export default {
 <style scoped>
 .form {
   display: flex;
+  align-items: center;
   padding: 0.25em;
   border: 1px solid #dddddd;
   color: currentcolor;
@@ -67,6 +84,16 @@ export default {
   margin: 0.25em 0;
 }
 
+.form > *:not(:last-child) {
+  padding-right: 0.5em;
+  margin-right: 0.5em;
+  border-right: 1px solid #dddddd;
+}
+
+.form .name {
+  text-align: left;
+  flex-grow: 1;
+}
 .form:hover {
   background-color: #eeeeee;
 }
