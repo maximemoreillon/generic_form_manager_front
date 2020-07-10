@@ -31,4 +31,4 @@ spec:
     nodePort: ${SERVICE_PORT}
   selector:
     app: ${APPLICATION_NAME}
-  type: LoadBalancer
+  type: NodePort

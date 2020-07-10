@@ -194,7 +194,9 @@ export default {
     delete_response(response_index) {
       let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}/responses/${response_index}`
       this.axios.delete(url)
-      .then(() => { console.log('yay') })
+      .then(() => {
+        this.form.responses.splice(response_index,1)
+      })
       .catch((error) => console.log(error))
     },
     format_date(date){

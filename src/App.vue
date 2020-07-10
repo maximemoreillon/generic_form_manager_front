@@ -19,7 +19,6 @@ body {
 
   margin: 0;
 
-  text-align: center;
 }
 
 nav {
@@ -38,6 +37,8 @@ nav a.router-link-exact-active {
 }
 
 main {
+  text-align: center;
+
   margin: 0 1em;
 }
 
