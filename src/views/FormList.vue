@@ -10,9 +10,12 @@
       class="form"
       :to="{ name: 'form_dashboard', query: {id: form._id} }"
       v-for="form in forms"
-      v-bind:key="form._id"
-      >
-      {{form.name}}
+      v-bind:key="form._id">
+
+      <span class="name">
+        {{form.name}}
+      </span>
+
     </router-link>
 
 
@@ -56,7 +59,7 @@ export default {
 
 <style scoped>
 .form {
-  display: block;
+  display: flex;
   padding: 0.25em;
   border: 1px solid #dddddd;
   color: currentcolor;

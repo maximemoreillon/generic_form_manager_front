@@ -4,15 +4,22 @@
 
     <template v-if="form">
       <h1 >{{form.name}}</h1>
+
+      <!-- Form Info table -->
       <h2>Form info</h2>
       <table class="">
         <tr>
-          <td>Form ID</td>
+          <td>ID</td>
           <td>{{form._id}}</td>
         </tr>
 
         <tr>
-          <td>API</td>
+          <td>Date</td>
+          <td>{{format_date(form.date)}}</td>
+        </tr>
+
+        <tr>
+          <td>API URL:</td>
           <td>
             <input
               class="api_url"
@@ -28,19 +35,7 @@
       <h2>Fields</h2>
       <!-- Link to Form Builder -->
 
-      <div class="">
-        <router-link
-          :to="{ name: 'form_builder', query: {id: $route.query.id} }">
-          Form builder
-        </router-link>
-      </div>
 
-      <div class="">
-        <router-link
-          :to="{ name: 'form', query: {id: $route.query.id} }">
-          Publishable form
-        </router-link>
-      </div>
 
 
       <template v-if="form.fields">
@@ -61,6 +56,20 @@
       </template>
       <div class="" v-else>
         No fields yet
+      </div>
+
+      <div class="">
+        <router-link
+          :to="{ name: 'form_builder', query: {id: $route.query.id} }">
+          Form builder
+        </router-link>
+      </div>
+
+      <div class="">
+        <router-link
+          :to="{ name: 'form', query: {id: $route.query.id} }">
+          Publishable form
+        </router-link>
       </div>
 
 
@@ -164,6 +173,15 @@ export default {
       this.axios.delete(url)
       .then(() => { console.log('yay') })
       .catch((error) => console.log(error))
+    },
+    format_date(date){
+      let options = {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+
+      }
+      return new Date(date).toLocaleString('ja-JP',options)
     }
   },
 }

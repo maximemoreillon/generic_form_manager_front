@@ -3,84 +3,98 @@
     <h1>Form builder</h1>
     <template v-if="form">
 
+      <button type="button" @click="submit()">Save</button>
+
+      <h2>Form metadata</h2>
       <div class="">
         Form title: <input type="text" v-model="form.name">
       </div>
 
-      <table class="fields_table">
-        <tr>
-          <th>Label</th>
-          <th>Type</th>
-          <th>Options</th>
-          <th>Delete</th>
-        </tr>
+      <h2>Form fields</h2>
 
-        <tr
-          class="field"
-          v-for="(field, field_index) in form.fields"
-          v-bind:key="field_index">
+      <template  v-if="form.fields">
 
-          <td>
-            <input
-              type="text"
-              v-model="field.label"
-              placeholder="Label">
-          </td>
+        <table class="fields_table" v-if="form.fields.length > 0">
+          <tr>
+            <th>Label</th>
+            <th>Type</th>
+            <th>Options</th>
+            <th>Delete</th>
+          </tr>
 
-          <td>
-            <select class="" v-model="field.type">
-              <option value="text">Text</option>
-              <option value="checkbox">checkbox</option>
-              <option value="select">select</option>
-            </select>
-          </td>
+          <tr
+            class="field"
+            v-for="(field, field_index) in form.fields"
+            v-bind:key="field_index">
 
-          <td>
-            <template v-if="field.type === 'select'">
+            <td>
+              <input
+                type="text"
+                v-model="field.label"
+                placeholder="Label">
+            </td>
 
+            <td>
+              <select class="" v-model="field.type">
+                <option value="text">Text</option>
+                <option value="checkbox">checkbox</option>
+                <option value="select">select</option>
+              </select>
+            </td>
 
-              <table class="options_table" v-if="field.options.length > 0">
-                <tr>
-                  <th>Label</th>
-                  <th>Value</th>
-                  <th>Delete</th>
-                </tr>
-                <tr
-                  v-for="(option, option_index) in field.options"
-                  v-bind:key="`field_${field_index}_option${option_index}`">
-                  <td>
-                    <input type="text" v-model="option.label" placeholder="Option label">
-                  </td>
-                  <td>
-                    <input type="text" v-model="option.value" placeholder="Option value">
-                  </td>
-                  <td>
-                    <button type="button" @click="delete_option(field_index, option_index)">Delete</button>
-                  </td>
-
-                </tr>
-              </table>
-
-              <button type="button" @click="add_option(field_index)">Add option</button>
-
-            </template>
+            <td>
+              <template v-if="field.type === 'select'">
 
 
+                <table class="options_table" v-if="field.options.length > 0">
+                  <tr>
+                    <th>Label</th>
+                    <th>Value</th>
+                    <th>Delete</th>
+                  </tr>
+                  <tr
+                    v-for="(option, option_index) in field.options"
+                    v-bind:key="`field_${field_index}_option${option_index}`">
+                    <td>
+                      <input type="text" v-model="option.label" placeholder="Option label">
+                    </td>
+                    <td>
+                      <input type="text" v-model="option.value" placeholder="Option value">
+                    </td>
+                    <td>
+                      <button type="button" @click="delete_option(field_index, option_index)">Delete</button>
+                    </td>
 
-          </td>
+                  </tr>
+                </table>
+                <div class="" v-else>
+                  No options yet
+                </div>
 
-          <td>
-            <button
-              type="button"
-              @click="remove_field(i)">
-              Remove field
-            </button>
-          </td>
+                <button type="button" @click="add_option(field_index)">Add option</button>
 
-        </tr>
+              </template>
 
 
-      </table>
+
+            </td>
+
+            <td>
+              <button
+                type="button"
+                @click="delete_field(field_index)">
+                Remove field
+              </button>
+            </td>
+
+          </tr>
+
+
+        </table>
+      </template>
+      <div class="" v-else>
+        No fields yet
+      </div>
 
       <button
         type="button"
@@ -88,10 +102,6 @@
         Add field
       </button>
 
-
-      <div class="">
-        <button type="button" @click="submit()">Save</button>
-      </div>
 
       <template v-if="form.fields">
         <h2>HTML code for this form</h2>
@@ -138,7 +148,7 @@ export default {
       if(!this.form.fields) this.$set(this.form,'fields',[])
       this.form.fields.push(new_field)
     },
-    remove_field(index) {
+    delete_field(index) {
       if(!confirm('Delete field?')) return
       this.form.fields.splice(index, 1)
     },
