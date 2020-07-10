@@ -3,7 +3,7 @@
 
     <template v-if="form">
 
-      <h1 >{{form.name}}</h1>
+      <h1>{{form.name}}</h1>
 
 
       <template v-if="form.fields">
@@ -11,12 +11,23 @@
         <form class="" ref="form" @submit.prevent="submit()">
           <table class="">
             <tr
-              v-for="(field,i) in form.fields"
-              v-bind:key="`field_${i}`">
+              v-for="(field,field_index) in form.fields"
+              v-bind:key="`field_${field_index}`">
 
               <td>{{field.label}}</td>
               <td>
+                <select
+                  v-if="field.type === 'select'"
+                  v-model="field.response">
+                  <option
+                    v-for="(option, option_index) in field.options"
+                    v-bind:key="`field_${field_index}_option_${option_index}`"
+                    :value="option.value">
+                    {{option.label}}
+                  </option>
+                </select>
                 <input
+                  v-else
                   :type="field.type"
                   :placeholder="field.label"
                   v-model="field.response"
@@ -24,14 +35,8 @@
               </td>
 
             </tr>
-            <tr>
-              <td colspan="2">
-                <input type="submit">
-              </td>
-
-            </tr>
-
           </table>
+          <input type="submit">
         </form>
 
 
@@ -104,5 +109,9 @@ table tr:not(:last-child) {
 }
 table th, table td {
   padding: 0.25em;
+}
+
+input[type="submit"] {
+  margin-top: 1em;
 }
 </style>

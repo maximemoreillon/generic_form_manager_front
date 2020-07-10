@@ -37,7 +37,7 @@
 
           <td>
             <template v-if="field.type === 'select'">
-              <button type="button" @click="add_option(field_index)">Add option</button>
+
 
               <table class="options_table" v-if="field.options.length > 0">
                 <tr>
@@ -61,6 +61,8 @@
                 </tr>
               </table>
 
+              <button type="button" @click="add_option(field_index)">Add option</button>
+
             </template>
 
 
@@ -77,29 +79,22 @@
 
         </tr>
 
-        <!-- Add a field button -->
-        <tr>
-          <td colspan="3">
-            <button
-              type="button"
-              @click="add_field">
-              Add field
-            </button>
-          </td>
-        </tr>
 
       </table>
 
-      <div class="">
+      <button
+        type="button"
+        @click="add_field">
+        Add field
+      </button>
 
-      </div>
 
       <div class="">
         <button type="button" @click="submit()">Save</button>
       </div>
 
       <template v-if="form.fields">
-        <h2>HTML sample</h2>
+        <h2>HTML code for this form</h2>
         <pre>
           <code>
             {{html_sample}}
@@ -271,5 +266,10 @@ table th, table td {
 
 .option input[type="text"]:not(:last-child) {
   margin-right: 1em;
+}
+
+textarea {
+  width: 100%;
+  height: auto;
 }
 </style>

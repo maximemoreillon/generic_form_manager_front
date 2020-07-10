@@ -11,12 +11,6 @@
           <td>{{form._id}}</td>
         </tr>
 
-        <!--
-        <tr>
-          <td>Author ID</td>
-          <td>{{form.author_id}}</td>
-        </tr>
-        -->
         <tr>
           <td>API</td>
           <td>
