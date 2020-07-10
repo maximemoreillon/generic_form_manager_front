@@ -4,25 +4,21 @@
     <template v-if="form">
 
       <div class="">
-        Rename form: <input type="text" v-model="form.name">
+        Form title: <input type="text" v-model="form.name">
       </div>
 
-
-      <div class="">
-
-      </div>
-
-      <table>
+      <table class="fields_table">
         <tr>
           <th>Label</th>
           <th>Type</th>
+          <th>Options</th>
           <th>Delete</th>
         </tr>
 
         <tr
           class="field"
-          v-for="(field, i) in form.fields"
-          v-bind:key="i">
+          v-for="(field, field_index) in form.fields"
+          v-bind:key="field_index">
 
           <td>
             <input
@@ -35,7 +31,40 @@
             <select class="" v-model="field.type">
               <option value="text">Text</option>
               <option value="checkbox">checkbox</option>
+              <option value="select">select</option>
             </select>
+          </td>
+
+          <td>
+            <template v-if="field.type === 'select'">
+              <button type="button" @click="add_option(field_index)">Add option</button>
+
+              <table class="options_table" v-if="field.options.length > 0">
+                <tr>
+                  <th>Label</th>
+                  <th>Value</th>
+                  <th>Delete</th>
+                </tr>
+                <tr
+                  v-for="(option, option_index) in field.options"
+                  v-bind:key="`field_${field_index}_option${option_index}`">
+                  <td>
+                    <input type="text" v-model="option.label" placeholder="Option label">
+                  </td>
+                  <td>
+                    <input type="text" v-model="option.value" placeholder="Option value">
+                  </td>
+                  <td>
+                    <button type="button" @click="delete_option(field_index, option_index)">Delete</button>
+                  </td>
+
+                </tr>
+              </table>
+
+            </template>
+
+
+
           </td>
 
           <td>
@@ -66,7 +95,7 @@
       </div>
 
       <div class="">
-        <button type="button" @click="submit()">Update form</button>
+        <button type="button" @click="submit()">Save</button>
       </div>
 
       <template v-if="form.fields">
@@ -105,17 +134,32 @@ export default {
   methods: {
     add_field(){
 
-      if(!this.form.fields) this.$set(this.form,'fields',[])
-
       let new_field = {
         label: '',
         type: 'text',
+        options: [],
       }
+
+      if(!this.form.fields) this.$set(this.form,'fields',[])
       this.form.fields.push(new_field)
     },
     remove_field(index) {
       if(!confirm('Delete field?')) return
       this.form.fields.splice(index, 1)
+    },
+    add_option(field_index){
+
+      let new_option = {
+        label: '',
+        value: '',
+      }
+
+      if(!this.form.fields[field_index].options) this.$set(this.form.fields[field_index],'options',[])
+      this.form.fields[field_index].options.push(new_option)
+    },
+    delete_option(field_index, option_index) {
+      if(!confirm('Delete option?')) return
+      this.form.fields[field_index].options.splice(option_index, 1)
     },
     get_form() {
       let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
@@ -141,9 +185,31 @@ export default {
 
       let inputs = '\n'
       this.form.fields.forEach((field) => {
-        inputs += `
+
+        if(field.type === 'select') {
+          let options = ``
+
+          field.options.forEach((option) => {
+            options += `
+              <option value="${option.value}">${option.label}</option>`
+          });
+
+
+          inputs += `
+            <select form="myForm">
+          ${options}
+
+            </select>
+          `
+        }
+        else {
+          inputs += `
             <label>${field.label}</label>
             <input type="${field.type}" name="${field.label}"><br>`
+        }
+
+
+
       });
 
 
@@ -157,6 +223,7 @@ export default {
         <body>
           <h1>${this.form.name}</h1>
           <form
+            id="myForm"
             action="${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}/responses"
             method="post">${inputs}
 
@@ -188,5 +255,21 @@ table tr:not(:last-child) {
 }
 table th, table td {
   padding: 0.25em;
+}
+
+.option {
+  padding: 0.25em;
+}
+
+.option:not(:last-child) {
+  border-bottom: 1px solid #dddddd;
+}
+
+.option > *:not(:last-child) {
+  margin-right: 0.25em;
+}
+
+.option input[type="text"]:not(:last-child) {
+  margin-right: 1em;
 }
 </style>

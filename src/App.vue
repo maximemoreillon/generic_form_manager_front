@@ -18,6 +18,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   margin: 0;
+
+  text-align: center;
 }
 
 nav {

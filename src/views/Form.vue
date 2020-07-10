@@ -61,12 +61,14 @@ export default {
   },
   methods: {
     get_form() {
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}/fields`
       this.axios.get(url)
       .then((response) => {
         this.form = response.data
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error)
+      })
     },
     submit(){
 

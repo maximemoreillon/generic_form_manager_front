@@ -14,6 +14,8 @@ Vue.config.productionTip = false
 // Redirect to login screen if not logged in (i.e. does not have JWT in cookies)
 router.beforeEach((to, from, next) => {
 
+
+
   if(VueCookies.get('jwt')) {
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${Vue.$cookies.get('jwt')}`
@@ -32,14 +34,15 @@ router.beforeEach((to, from, next) => {
 
   }
   else {
-    delete axios.defaults.headers.common['Authorization']
-    window.location.href = process.env.VUE_APP_AUTHENTICATION_FRONT_URL;
+    if(to.name === 'form') return next()
+    else {
+      delete axios.defaults.headers.common['Authorization']
+      window.location.href = process.env.VUE_APP_AUTHENTICATION_FRONT_URL
+    }
+
   }
 
-
-
-
-});
+})
 
 new Vue({
   router,
