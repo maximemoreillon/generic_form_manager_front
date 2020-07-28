@@ -6,7 +6,9 @@
       <h1>{{form.name}}</h1>
 
 
-      <template v-if="form.fields">
+      <div
+        class="table_wrapper"
+        v-if="form.fields">
 
         <form class="" ref="form" @submit.prevent="submit()">
           <table class="">
@@ -36,11 +38,22 @@
 
             </tr>
           </table>
-          <input type="submit">
+
+          <div class="centered">
+            <input style="display:none;" type="submit">
+            <button
+              type="button"
+              class="bordered"
+              @click="submit()">
+              <send-icon />
+              <span>Send</span>
+            </button>
+          </div>
+
         </form>
 
 
-      </template>
+      </div>
 
     </template>
 
@@ -66,7 +79,13 @@ export default {
   },
   methods: {
     get_form() {
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}/fields`
+
+      let form_id = this.$route.params.form_id
+        || this.$route.params.id
+        || this.$route.query.form_id
+        || this.$route.query.id
+
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}/fields`
       this.axios.get(url)
       .then((response) => {
         this.form = response.data
@@ -83,7 +102,12 @@ export default {
         body[field.label] = field.response
       })
 
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}/responses`
+      let form_id = this.$route.params.form_id
+        || this.$route.params.id
+        || this.$route.query.form_id
+        || this.$route.query.id
+
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}/responses`
       this.axios.post(url,body)
       .then(() => {
         this.$router.push({name: 'success'})
@@ -100,18 +124,22 @@ export default {
 
 <style scoped>
 table {
+  width: 100%;
   border-collapse: collapse;
-  margin-left: auto;
-  margin-right: auto;
 }
 table tr:not(:last-child) {
   border-bottom: 1px solid #dddddd;
 }
 table th, table td {
-  padding: 0.25em;
+  padding: 0.5em 0;
 }
 
-input[type="submit"] {
-  margin-top: 1em;
+input[type="text"],
+select {
+  width: 100%;
 }
+
+
+
+
 </style>

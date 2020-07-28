@@ -6,21 +6,21 @@ Vue.use(VueRouter)
   const routes = [
   {
     path: '/',
-    name: 'form_list',
+    name: 'forms',
     component: () => import(/* webpackChunkName: "about" */ '../views/FormList.vue')
   },
   {
-    path: '/form',
+    path: '/forms/:form_id',
     name: 'form',
     component: () => import(/* webpackChunkName: "about" */ '../views/Form.vue')
   },
   {
-    path: '/form_dashboard',
+    path: '/forms/:form_id/dashboard',
     name: 'form_dashboard',
     component: () => import(/* webpackChunkName: "about" */ '../views/FormDashboard.vue')
   },
   {
-    path: '/form_builder',
+    path: '/forms/:form_id/builder',
     name: 'form_builder',
     component: () => import(/* webpackChunkName: "about" */ '../views/FormBuilder.vue')
   },

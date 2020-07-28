@@ -3,7 +3,7 @@
 
 
     <template v-if="form">
-      <h1 >{{form.name}}</h1>
+      <h1>{{form.name}}</h1>
 
       <!-- Form Info table -->
       <h2>Form info</h2>
@@ -30,26 +30,34 @@
         </tr>
       </table>
 
-      <button type="button" @click="delete_form()">Delete form</button>
+      <div class="centered">
+        <button
+          type="button"
+          class="bordered"
+          @click="delete_form()">
+          <delete-icon />
+          <span>フォーム削除/ Delete form</span>
+        </button>
+      </div>
+
+
 
       <h2>Fields</h2>
       <!-- Link to Form Builder -->
       <p class="">
         <router-link
-          :to="{ name: 'form_builder', query: {id: $route.query.id} }">
+          :to="{ name: 'form_builder', params: {form_id: form._id} }">
           Form builder
         </router-link>
       </p>
 
-      <p class="">
-        <label>Publishable form URL: </label>
-        <input
-          class="url"
-          type="text"
-          readonly
-          :value="publishable_form_url">
-
+      <p>
+        <router-link
+          :to="{ name: 'form', params: {form_id: form._id} }">
+          Publishable form
+        </router-link>
       </p>
+
 
 
 
@@ -98,15 +106,31 @@
 
       <h2>Responses</h2>
       <template v-if="form.responses">
+        <h3>Responses metadata</h3>
+        <table class="responses_metadata">
+          <tr>
+            <td>
+              Response count
+            </td>
+            <td>
+              {{form.responses.length}}
+            </td>
+          </tr>
+          <tr>
+            <td>API URL</td>
+            <td>
+              <input
+              class="api_url"
+              type="text"
+              readonly
+              :value="`${api_url}/forms/${form._id}/responses?token=${$cookies.get('jwt')}`">
+            </td>
+          </tr>
 
-        <div class="api_wrapper">
-          <label>API:</label>
-          <input
-            class="api_url"
-            type="text"
-            readonly
-            :value="`${api_url}/forms/${form._id}/responses?token=${$cookies.get('jwt')}`">
-        </div>
+        </table>
+
+        <h3>Responses content</h3>
+
 
         <table class="responses_table">
           <tr>
@@ -126,7 +150,11 @@
             </td>
 
             <td>
-              <button type="button" @click="delete_response(response_index)">delete</button>
+              <button
+                type="button"
+                @click="delete_response(response_index)">
+                <delete-icon />
+              </button>
             </td>
           </tr>
 
@@ -164,7 +192,13 @@ export default {
   methods: {
     get_form() {
       this.loading = true
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
+
+      let form_id = this.$route.params.form_id
+        || this.$route.params.id
+        || this.$route.query.form_id
+        || this.$route.query.id
+
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}`
       this.axios.get(url)
       .then((response) => {
         this.form = response.data
@@ -221,17 +255,19 @@ export default {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-left: auto;
-  margin-right: auto;
 }
-table tr:not(:last-child) {
+tr:not(:last-child) {
   border-bottom: 1px solid #dddddd;
 }
 
-table tr:hover{
+tr:hover{
   background-color: #eeeeee;
 }
-table th, table td {
-  padding: 0.25em;
+th, td {
+  padding: 0.25em 0;
+}
+
+input[type="text"] {
+  width: 100%;
 }
 </style>

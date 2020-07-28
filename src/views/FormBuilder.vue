@@ -3,23 +3,30 @@
     <h1>Form builder</h1>
     <template v-if="form">
 
-      <button type="button" @click="submit()">Save</button>
 
       <h2>Form metadata</h2>
-      <div class="">
-        Form title: <input type="text" v-model="form.name">
+
+      <div class="title_wrapper">
+        <label for="">Form title:</label>
+        <input type="text" v-model="form.name">
       </div>
 
       <h2>Form fields</h2>
 
-      <template  v-if="form.fields">
+      <div
+        class="table_wrapper"
+        v-if="form.fields">
 
-        <table class="fields_table" v-if="form.fields.length > 0">
+
+
+        <table
+          class="fields_table"
+          v-if="form.fields.length > 0">
           <tr>
-            <th>Label</th>
-            <th>Type</th>
-            <th>Options</th>
-            <th>Delete</th>
+            <th>ラベル / Label</th>
+            <th>タイプ / Type</th>
+            <th>選択し / Options</th>
+            <th>削除 / Delete</th>
           </tr>
 
           <tr
@@ -46,11 +53,13 @@
               <template v-if="field.type === 'select'">
 
 
-                <table class="options_table" v-if="field.options.length > 0">
+                <table
+                  v-if="field.options.length > 0"
+                  class="options_table" >
                   <tr>
-                    <th>Label</th>
-                    <th>Value</th>
-                    <th>Delete</th>
+                    <th>ラベル / Label</th>
+                    <th>値 / Value</th>
+                    <th>削除 / Delete</th>
                   </tr>
                   <tr
                     v-for="(option, option_index) in field.options"
@@ -62,20 +71,33 @@
                       <input type="text" v-model="option.value" placeholder="Option value">
                     </td>
                     <td>
-                      <button type="button" @click="delete_option(field_index, option_index)">Delete</button>
+                      <button
+                        type="button"
+                        @click="delete_option(field_index, option_index)">
+                        <delete-icon />
+                      </button>
                     </td>
 
                   </tr>
                 </table>
+
                 <div class="" v-else>
                   No options yet
                 </div>
 
-                <button type="button" @click="add_option(field_index)">Add option</button>
+                <div class="centered">
+                  <button
+                    class=""
+                    type="button"
+                    @click="add_option(field_index)">
+                    <plus-icon />
+                    <span>追加 / Add option</span>
+                  </button>
+                </div>
+
+
 
               </template>
-
-
 
             </td>
 
@@ -83,7 +105,7 @@
               <button
                 type="button"
                 @click="delete_field(field_index)">
-                Remove field
+                <delete-icon />
               </button>
             </td>
 
@@ -91,20 +113,53 @@
 
 
         </table>
-      </template>
+
+      </div>
+
       <div class="" v-else>
         No fields yet
       </div>
 
-      <button
-        type="button"
-        @click="add_field">
-        Add field
-      </button>
+      <p class="centered">
+        <button
+          type="button"
+          class="bordered"
+          @click="add_field()">
+          <plus-icon />
+          <span>Add field</span>
+        </button>
+      </p>
+
+      <p class="centered">
+        <button
+          type="button"
+          class="bordered"
+          @click="return_to_dashboard()">
+          <arrow-left-icon />
+          <span>Return</span>
+        </button>
+
+        <button
+          type="button"
+          class="bordered"
+          @click="submit()">
+          <content-save-icon />
+          <span>Save</span>
+        </button>
+      </p>
+
 
 
       <template v-if="form.fields">
         <h2>HTML code for this form</h2>
+        <div class="centered">
+          <button
+            class="bordered"
+            type="button">
+            <download-icon />
+            <span>Download</span>
+          </button>
+        </div>
         <pre>
           <code>
             {{html_sample}}
@@ -167,7 +222,12 @@ export default {
       this.form.fields[field_index].options.splice(option_index, 1)
     },
     get_form() {
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
+      let form_id = this.$route.params.form_id
+        || this.$route.params.id
+        || this.$route.query.form_id
+        || this.$route.query.id
+
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}`
       this.axios.get(url)
       .then((response) => {
         this.form = response.data
@@ -175,12 +235,27 @@ export default {
       .catch((error) => console.log(error))
     },
     submit(){
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
+
+      let form_id = this.$route.params.form_id
+        || this.$route.params.id
+        || this.$route.query.form_id
+        || this.$route.query.id
+
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}`
       this.axios.put(url,this.form)
-      .then(() => {
-        this.$router.push({name:'form_dashboard',query:{id:this.$route.query.id}})
-      })
+      .then(() => { this.return_to_dashboard() })
       .catch((error) => console.log(error))
+    },
+    return_to_dashboard(){
+      let form_id = this.$route.params.form_id
+        || this.$route.params.id
+        || this.$route.query.form_id
+        || this.$route.query.id
+
+      this.$router.push({
+        name:'form_dashboard',
+        params:{ form_id: form_id }
+      })
     }
 
 
@@ -251,35 +326,27 @@ pre {
 }
 
 table {
-  border-collapse: collapse;
-  margin-left: auto;
-  margin-right: auto;
-}
-table tr:not(:last-child) {
-  border-bottom: 1px solid #dddddd;
-}
-table th, table td {
-  padding: 0.25em;
-}
-
-.option {
-  padding: 0.25em;
-}
-
-.option:not(:last-child) {
-  border-bottom: 1px solid #dddddd;
-}
-
-.option > *:not(:last-child) {
-  margin-right: 0.25em;
-}
-
-.option input[type="text"]:not(:last-child) {
-  margin-right: 1em;
-}
-
-textarea {
   width: 100%;
-  height: auto;
+  border-collapse: collapse;
+  text-align: center;
 }
+
+tr:not(:last-child) {
+  border-bottom: 1px solid #dddddd;
+}
+
+tr:hover {
+  background-color: #eeeeee;
+}
+
+td {
+  padding: 0.5em;
+}
+
+table select,
+table input {
+  width: 100%;
+}
+
+
 </style>
