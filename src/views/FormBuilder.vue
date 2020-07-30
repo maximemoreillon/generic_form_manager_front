@@ -14,7 +14,7 @@
 
       <h2>Form metadata</h2>
 
-      <div class="title_wrapper">
+      <div class="centered">
         <label for="">Form title:</label>
         <input type="text" v-model="form.name">
       </div>

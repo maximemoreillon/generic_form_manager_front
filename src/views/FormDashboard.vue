@@ -57,49 +57,52 @@
         </router-link>
       </p>
 
-      <p>
-        <router-link
-          :to="{ name: 'form', params: {form_id: form._id} }">
-          Publishable form
-        </router-link>
-      </p>
-
-
-
-
-
       <template v-if="form.fields">
+        <template v-if="form.fields.length > 0">
 
-        <table class="">
-          <tr>
-            <th>Label</th>
-            <th>Type</th>
-            <th>Options</th>
-          </tr>
-          <tr
-            v-for="(field,field_index) in form.fields"
-            v-bind:key="`field_${field_index}`">
-            <td>{{field.label || '-'}}</td>
-            <td>{{field.type}}</td>
-            <td>
-              <table v-if="field.type==='select'">
-                <tr>
-                  <th>Label</th>
-                  <th>value</th>
-                </tr>
-                <tr
-                  v-for="(option, option_index) in field.options"
-                  v-bind:key="`field_${field_index}_option${option_index}`">
-                  <td>{{option.label || '-'}}</td>
-                  <td>{{option.value || '-'}}</td>
 
-                </tr>
-              </table>
-              <span v-else>-</span>
-            </td>
-          </tr>
+          <p>
+            <router-link
+              :to="{ name: 'form', params: {form_id: form._id} }">
+              Publishable form
+            </router-link>
+          </p>
 
-        </table>
+          <table class="">
+            <tr>
+              <th>Label</th>
+              <th>Type</th>
+              <th>Options</th>
+            </tr>
+            <tr
+              v-for="(field,field_index) in form.fields"
+              v-bind:key="`field_${field_index}`">
+              <td>{{field.label || '-'}}</td>
+              <td>{{field.type}}</td>
+              <td>
+                <table v-if="field.type==='select'">
+                  <tr>
+                    <th>Label</th>
+                    <th>value</th>
+                  </tr>
+                  <tr
+                    v-for="(option, option_index) in field.options"
+                    v-bind:key="`field_${field_index}_option${option_index}`">
+                    <td>{{option.label || '-'}}</td>
+                    <td>{{option.value || '-'}}</td>
+
+                  </tr>
+                </table>
+                <span v-else>-</span>
+              </td>
+            </tr>
+
+          </table>
+        </template>
+        <div v-else class="">
+          No fields yet
+
+        </div>
       </template>
       <div class="" v-else>
         No fields yet
