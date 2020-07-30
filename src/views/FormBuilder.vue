@@ -157,6 +157,7 @@
         <h2>HTML code for this form</h2>
         <div class="centered">
           <button
+            v-if="false"
             class="bordered"
             type="button">
             <download-icon />
