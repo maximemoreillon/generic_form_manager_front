@@ -4,6 +4,9 @@
 
     <template v-if="form">
       <h1>{{form.name}}</h1>
+      <p>
+        <router-link :to="{ name: 'forms'}">Back to my forms</router-link>
+      </p>
 
       <!-- Form Info table -->
       <h2>Form info</h2>
@@ -109,7 +112,6 @@
 
       <h2>Responses</h2>
       <template v-if="form.responses">
-        <h3>Responses metadata</h3>
         <table class="responses_metadata">
           <tr>
             <td>

@@ -1,7 +1,15 @@
 <template>
   <div class="form_builder">
     <h1>Form builder</h1>
+
+
     <template v-if="form">
+
+      <p>
+        <router-link :to="{ name:'form_dashboard', params:{ form_id: $route.params.form_id } }">
+          Back to {{form.name}}
+        </router-link>
+      </p>
 
 
       <h2>Form metadata</h2>
@@ -136,14 +144,6 @@
         <button
           type="button"
           class="bordered"
-          @click="return_to_dashboard()">
-          <arrow-left-icon />
-          <span>Return</span>
-        </button>
-
-        <button
-          type="button"
-          class="bordered"
           @click="submit()">
           <content-save-icon />
           <span>Save</span>
@@ -248,17 +248,7 @@ export default {
       .then(() => { this.return_to_dashboard() })
       .catch((error) => console.log(error))
     },
-    return_to_dashboard(){
-      let form_id = this.$route.params.form_id
-        || this.$route.params.id
-        || this.$route.query.form_id
-        || this.$route.query.id
 
-      this.$router.push({
-        name:'form_dashboard',
-        params:{ form_id: form_id }
-      })
-    }
 
 
   },

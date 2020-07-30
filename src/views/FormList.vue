@@ -113,6 +113,7 @@ export default {
 table {
   width: 100%;
   border-collapse: collapse;
+  text-align: center;
 }
 
 tr:not(:first-child) {
@@ -125,6 +126,10 @@ tr:not(:first-child):hover {
 
 tr:not(:last-child) {
   border-bottom: 1px solid #dddddd;
+}
+
+th, td {
+  padding: 0.25em 0;
 }
 
 </style>

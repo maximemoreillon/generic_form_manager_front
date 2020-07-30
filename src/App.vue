@@ -1,8 +1,5 @@
 <template>
   <div id="app">
-    <nav id="nav">
-      <router-link to="/">Home</router-link>
-    </nav>
     <main>
       <router-view/>
     </main>
@@ -23,26 +20,25 @@ body {
 
 }
 
-nav {
-  padding: 1em;
-  border-bottom: 1px solid #dddddd;
+#app {
+  display: flex;
+  justify-content: center;
+}
+main {
+  flex-grow: 1;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  max-width: 800px;
 }
 
-nav a {
-  font-weight: bold;
-  color: #444444;
+a {
+  color: #c00000;
   text-decoration: none;
 }
 
-nav a.router-link-exact-active {
-  color: #c00000;
-}
-
-main {
-
-  margin-left: auto;
-  margin-right: auto;
-  max-width: 800px;
+a:hover {
+  text-decoration: underline;
 }
 
 

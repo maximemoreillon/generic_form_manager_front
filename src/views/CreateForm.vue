@@ -1,6 +1,9 @@
 <template>
   <div class="create_form">
     <h1>Create new form</h1>
+    <p>
+      <router-link :to="{ name: 'forms'}">Back to my forms</router-link>
+    </p>
 
     <form class="" @submit.prevent="submit()">
       <div class="">
