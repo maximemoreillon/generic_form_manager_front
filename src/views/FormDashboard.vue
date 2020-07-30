@@ -243,13 +243,13 @@ export default {
     },
     delete_form() {
       if(!confirm('ホンマ？')) return
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}`
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.form._id}`
       this.axios.delete(url)
-      .then(() => { this.$router.push({name: 'form_list'}) })
+      .then(() => { this.$router.push({name: 'forms'}) })
       .catch((error) => console.log(error))
     },
     delete_response(response_index) {
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.$route.query.id}/responses/${response_index}`
+      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.form._id}/responses/${response_index}`
       this.axios.delete(url)
       .then(() => {
         this.form.responses.splice(response_index,1)
