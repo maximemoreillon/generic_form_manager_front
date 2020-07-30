@@ -119,17 +119,7 @@
 
           </tr>
 
-          <tr>
-            <td colspan="4">
-              <button
-                type="button"
-                class="bordered"
-                @click="add_field()">
-                <plus-icon />
-                <span>Add field</span>
-              </button>
-            </td>
-          </tr>
+
 
 
         </table>
@@ -139,6 +129,17 @@
       <div class="" v-else>
         No fields yet
       </div>
+
+
+      <p class="centered">
+        <button
+          type="button"
+          class="bordered"
+          @click="add_field()">
+          <plus-icon />
+          <span>Add field</span>
+        </button>
+      </p>
 
       <p class="centered">
         <button
@@ -245,7 +246,9 @@ export default {
 
       let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}`
       this.axios.put(url,this.form)
-      .then(() => { this.return_to_dashboard() })
+      .then(() => {
+        this.$router.push({ name:'form_dashboard', params:{ form_id: this.$route.params.form_id } })
+       })
       .catch((error) => console.log(error))
     },
 

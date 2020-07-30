@@ -29,7 +29,11 @@
           </td>
 
           <td class="responses">
-            {{form.responses.length}}
+            <span v-if="form.responses">
+              {{form.responses.length}}
+            </span>
+            <span v-else>-</span>
+
           </td>
 
         </tr>
