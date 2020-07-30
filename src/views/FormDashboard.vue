@@ -28,17 +28,20 @@
               :value="`${api_url}/forms/${form._id}?token=${$cookies.get('jwt')}`">
           </td>
         </tr>
+
+        <tr>
+          <td>Delete form</td>
+          <td>
+            <button
+              type="button"
+              class=""
+              @click="delete_form()">
+              <delete-icon />
+            </button>
+          </td>
+        </tr>
       </table>
 
-      <div class="centered">
-        <button
-          type="button"
-          class="bordered"
-          @click="delete_form()">
-          <delete-icon />
-          <span>フォーム削除/ Delete form</span>
-        </button>
-      </div>
 
 
 
@@ -126,13 +129,26 @@
               :value="`${api_url}/forms/${form._id}/responses?token=${$cookies.get('jwt')}`">
             </td>
           </tr>
+          <tr>
+            <td>Excel export</td>
+            <td>
+              <button
+                type="button"
+                class=""
+                @click="excel_export()">
+                <download-icon />
+              </button>
+            </td>
+          </tr>
 
         </table>
 
         <h3>Responses content</h3>
 
 
-        <table class="responses_table">
+        <table
+          id="responses_table"
+          class="responses_table">
           <tr>
             <th
               v-for="key in response_keys"
@@ -153,6 +169,7 @@
               <button
                 type="button"
                 @click="delete_response(response_index)">
+
                 <delete-icon />
               </button>
             </td>
@@ -172,6 +189,7 @@
 
 <script>
 // @ is an alias to /src
+import XLSX from 'xlsx'
 
 export default {
   name: 'Form',
@@ -241,6 +259,13 @@ export default {
       }
       return new Date(date).toLocaleString('ja-JP',options)
     },
+    excel_export(){
+      var workbook = XLSX.utils.book_new();
+      var ws1 = XLSX.utils.table_to_sheet(document.getElementById('responses_table'))
+      XLSX.utils.book_append_sheet(workbook, ws1, "Sheet1")
+      XLSX.writeFile(workbook, 'export.xlsx')
+
+    },
 
   },
   computed: {
@@ -255,14 +280,13 @@ export default {
 table {
   width: 100%;
   border-collapse: collapse;
+  text-align: center;
 }
 tr:not(:last-child) {
   border-bottom: 1px solid #dddddd;
 }
 
-tr:hover{
-  background-color: #eeeeee;
-}
+
 th, td {
   padding: 0.25em 0;
 }

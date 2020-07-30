@@ -2,30 +2,40 @@
   <div class="home">
 
     <h1>My forms</h1>
-    <p>Click <router-link :to="{ name: 'create_form'}">here</router-link> to create a new form</p>
+    <p>
+      <router-link :to="{ name: 'create_form'}">Create a new form</router-link>
+    </p>
 
 
     <template v-if="!loading && !error_message">
-      <router-link
+      <table class="forms_table">
+        <tr>
+          <th>Date</th>
+          <th>Tite</th>
+          <th>Responses</th>
+        </tr>
 
-        class="form"
-        :to="{ name: 'form_dashboard', params: {form_id: form._id} }"
-        v-for="form in forms"
-        v-bind:key="form._id">
+        <tr
+          v-for="form in forms"
+          v-bind:key="form._id"
+          @click="view_form(form._id)">
 
-        <span class="date">
-          {{format_date(form.date)}}
-        </span>
+          <td class="date">
+            {{format_date(form.date)}}
+          </td>
 
-        <span class="name">
-          {{form.name}}
-        </span>
+          <td class="name">
+            {{form.name}}
+          </td>
 
-        <span class="responses">
-          Responses: {{form.responses.length}}
-        </span>
+          <td class="responses">
+            {{form.responses.length}}
+          </td>
 
-      </router-link>
+        </tr>
+
+      </table>
+
     </template>
 
 
@@ -89,6 +99,9 @@ export default {
       }
       return new Date(date).toLocaleString('ja-JP',options)
     },
+    view_form(form_id){
+      this.$router.push({name: 'form_dashboard', params: {form_id: form_id}})
+    }
 
   }
 }
@@ -97,29 +110,21 @@ export default {
 <style scoped>
 
 
-
-.form {
-  display: flex;
-  align-items: center;
-  padding: 0.25em;
-  border: 1px solid #dddddd;
-  color: currentcolor;
-  text-decoration: none;
-  margin: 0.25em 0;
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.form > *:not(:last-child) {
-  padding-right: 0.5em;
-  margin-right: 0.5em;
-  border-right: 1px solid #dddddd;
+tr:not(:first-child) {
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+tr:not(:first-child):hover {
+  background-color: #dddddd;
 }
 
-.form .name {
-  text-align: left;
-  flex-grow: 1;
-}
-.form:hover {
-  background-color: #eeeeee;
+tr:not(:last-child) {
+  border-bottom: 1px solid #dddddd;
 }
 
 </style>

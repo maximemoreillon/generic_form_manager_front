@@ -111,6 +111,18 @@
 
           </tr>
 
+          <tr>
+            <td colspan="4">
+              <button
+                type="button"
+                class="bordered"
+                @click="add_field()">
+                <plus-icon />
+                <span>Add field</span>
+              </button>
+            </td>
+          </tr>
+
 
         </table>
 
@@ -119,16 +131,6 @@
       <div class="" v-else>
         No fields yet
       </div>
-
-      <p class="centered">
-        <button
-          type="button"
-          class="bordered"
-          @click="add_field()">
-          <plus-icon />
-          <span>Add field</span>
-        </button>
-      </p>
 
       <p class="centered">
         <button
@@ -335,7 +337,7 @@ tr:not(:last-child) {
   border-bottom: 1px solid #dddddd;
 }
 
-tr:hover {
+tr:not(:last-child):not(:first-child):hover {
   background-color: #eeeeee;
 }
 
@@ -346,6 +348,10 @@ td {
 table select,
 table input {
   width: 100%;
+}
+
+.centered > *:not(:last-child){
+  margin-right: 0.5em;
 }
 
 
