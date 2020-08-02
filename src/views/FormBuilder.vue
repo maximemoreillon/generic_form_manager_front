@@ -14,7 +14,7 @@
 
       <h2>Form metadata</h2>
 
-      <div class="centered">
+      <div class="">
         <label for="">Form title:</label>
         <input type="text" v-model="form.name">
       </div>
@@ -65,7 +65,6 @@
                   v-if="field.options.length > 0"
                   class="options_table" >
                   <tr>
-                    <th>ラベル / Label</th>
                     <th>値 / Value</th>
                     <th>削除 / Delete</th>
                   </tr>
@@ -73,11 +72,9 @@
                     v-for="(option, option_index) in field.options"
                     v-bind:key="`field_${field_index}_option${option_index}`">
                     <td>
-                      <input type="text" v-model="option.label" placeholder="Option label">
+                      <input type="text" v-model="option.value" placeholder="Option">
                     </td>
-                    <td>
-                      <input type="text" v-model="option.value" placeholder="Option value">
-                    </td>
+
                     <td>
                       <button
                         type="button"
@@ -124,6 +121,11 @@
 
         </table>
 
+        <div class="" v-else>
+          No fields yet, click the + button hereunder to create one.
+
+        </div>
+
       </div>
 
       <div class="" v-else>
@@ -147,7 +149,7 @@
           class="bordered"
           @click="submit()">
           <content-save-icon />
-          <span>Save</span>
+          <span>Save form</span>
         </button>
       </p>
 
@@ -267,7 +269,7 @@ export default {
 
           field.options.forEach((option) => {
             options += `
-              <option value="${option.value}">${option.label}</option>`
+              <option value="${option.value}">${option.value}</option>`
           });
 
 
@@ -345,6 +347,10 @@ table input {
 }
 
 .centered > *:not(:last-child){
+  margin-right: 0.5em;
+}
+
+label {
   margin-right: 0.5em;
 }
 

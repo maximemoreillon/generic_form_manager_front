@@ -50,15 +50,17 @@
 
       <h2>Fields</h2>
       <!-- Link to Form Builder -->
-      <p class="">
-        <router-link
-          :to="{ name: 'form_builder', params: {form_id: form._id} }">
-          Form builder
-        </router-link>
-      </p>
+
 
       <template v-if="form.fields">
         <template v-if="form.fields.length > 0">
+
+          <p class="">
+            <router-link
+              :to="{ name: 'form_builder', params: {form_id: form._id} }">
+              Form builder
+            </router-link>
+          </p>
 
 
           <p>
@@ -81,14 +83,10 @@
               <td>{{field.type}}</td>
               <td>
                 <table v-if="field.type==='select'">
-                  <tr>
-                    <th>Label</th>
-                    <th>value</th>
-                  </tr>
+
                   <tr
                     v-for="(option, option_index) in field.options"
                     v-bind:key="`field_${field_index}_option${option_index}`">
-                    <td>{{option.label || '-'}}</td>
                     <td>{{option.value || '-'}}</td>
 
                   </tr>
@@ -100,12 +98,11 @@
           </table>
         </template>
         <div v-else class="">
-          No fields yet
-
+          No fields yet, click <router-link :to="{ name: 'form_builder', params: {form_id: form._id} }"> here </router-link> to create some.
         </div>
       </template>
-      <div class="" v-else>
-        No fields yet
+      <div v-else class="">
+        No fields yet, click <router-link :to="{ name: 'form_builder', params: {form_id: form._id} }"> here </router-link> to create some.
       </div>
 
 

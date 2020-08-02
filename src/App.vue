@@ -68,6 +68,11 @@ button > *:not(:last-child) {
   margin-right: 0.25em;
 }
 
+button > .material-design-icon {
+  display: flex;
+  align-items: center;
+}
+
 button.bordered {
   border: 1px solid black;
   border-radius: 5px;

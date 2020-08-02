@@ -2,12 +2,11 @@
   <div class="home">
 
     <h1>My forms</h1>
-    <p>
-      <router-link :to="{ name: 'create_form'}">Create a new form</router-link>
-    </p>
 
-
-    <template v-if="!loading && !error_message">
+    <template v-if="!loading && !error_message && forms.length > 0">
+      <p>
+        <router-link :to="{ name: 'create_form'}">Create a new form</router-link>
+      </p>
       <table class="forms_table">
         <tr>
           <th>Date</th>
@@ -41,6 +40,10 @@
       </table>
 
     </template>
+
+    <div class="" v-if="!loading && !error_message && forms.length === 0">
+      No forms yet, click <router-link :to="{ name: 'create_form'}">here</router-link> to create one.
+    </div>
 
 
     <div class="">

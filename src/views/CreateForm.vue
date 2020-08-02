@@ -6,14 +6,9 @@
     </p>
 
     <form class="" @submit.prevent="submit()">
-      <div class="">
-        <label>Form name:</label>
-        <input type="text" v-model="form_name" placeholder="Form name">
-      </div>
-
-      <div class="">
-        <input type="submit">
-      </div>
+      <label>Name for your new form: </label>
+      <input type="text" v-model="form_name" placeholder="Form name">
+      <input type="submit">
 
 
     </form>
@@ -52,16 +47,11 @@ export default {
 
 <style scoped>
 form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  //text-align: center;
 }
 
-form > div {
-  margin: 0.5em;
+form > *:not(:last-child) {
+  margin-right: 0.5em;
 }
 
-label {
-  margin-right: 1em;
-}
 </style>

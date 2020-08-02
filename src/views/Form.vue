@@ -25,7 +25,7 @@
                     v-for="(option, option_index) in field.options"
                     v-bind:key="`field_${field_index}_option_${option_index}`"
                     :value="option.value">
-                    {{option.label}}
+                    {{option.value}}
                   </option>
                 </select>
                 <input
