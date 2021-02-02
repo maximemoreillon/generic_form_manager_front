@@ -4,20 +4,21 @@ stages:
 
 variables:
   APPLICATION_NAME: generic-form-manager-front
-  SERVICE_PORT: 31786
+  DOCKER_IMAGE: ${DOCKER_HUB_USERNAME}/${APPLICATION_NAME}
 
 containerization:
   stage: containerization
+  tags:
+    - moreillon
   script:
-    - docker build -t ${CONTAINER_REGISTRY}/${APPLICATION_NAME} .
-    - docker push ${CONTAINER_REGISTRY}/${APPLICATION_NAME}
+    - docker build -t ${DOCKER_IMAGE} .
+    - docker push ${DOCKER_IMAGE}
+    - docker image rm ${DOCKER_IMAGE}
 
 deployment:
   stage: deployment
   script:
-    # create/update the deployment
-    - envsubst < deployment.yml | kubectl apply -f -
-    # Pull latest image of deployment
+    # Pull latest image by restarting the deployment
     - kubectl rollout restart deployment/${APPLICATION_NAME}
   environment:
     name: production
