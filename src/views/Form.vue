@@ -80,12 +80,9 @@ export default {
   methods: {
     get_form() {
 
-      let form_id = this.$route.params.form_id
-        || this.$route.params.id
-        || this.$route.query.form_id
-        || this.$route.query.id
+      const form_id = this.$route.params.form_id
 
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}/fields`
+      const url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}/fields`
       this.axios.get(url)
       .then((response) => {
         this.form = response.data
@@ -96,23 +93,21 @@ export default {
     },
     submit(){
 
-      // Building the request vody (dirty)
-      let body = {}
-      this.form.fields.forEach( (field) => {
-        body[field.label] = field.response
-      })
+      // Building the request body (dirty)
+      const body = this.form.fields.reduce( (acc, field) => {
+        acc[field.label] = field.response
+        return acc
+      },{})
 
-      let form_id = this.$route.params.form_id
-        || this.$route.params.id
-        || this.$route.query.form_id
-        || this.$route.query.id
+      const form_id = this.$route.params.form_id
 
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}/responses`
+      const url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}/responses`
       this.axios.post(url,body)
-      .then(() => {
-        this.$router.push({name: 'success'})
+      .then(() => { this.$router.push({name: 'success'}) })
+      .catch((error) => {
+        alert(error)
+        console.log(error)
       })
-      .catch((error) => console.log(error))
 
 
     }
