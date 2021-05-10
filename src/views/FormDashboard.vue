@@ -178,6 +178,27 @@
           </tr>
 
         </table>
+
+        <table
+          id="export_table">
+          <tr>
+            <th
+              v-for="key in response_keys"
+              v-bind:key="key">{{key}}</th>
+          </tr>
+          <tr
+            v-for="response in form.responses"
+            v-bind:key="response._id">
+            <td
+              v-for="key in response_keys"
+              v-bind:key="`${response._id}_${key}_export`">
+              {{response[key]}}
+            </td>
+          </tr>
+
+        </table>
+
+
       </template>
       <div class="" v-else>
         No responses yet
@@ -213,12 +234,9 @@ export default {
     get_form() {
       this.loading = true
 
-      let form_id = this.$route.params.form_id
-        || this.$route.params.id
-        || this.$route.query.form_id
-        || this.$route.query.id
+      const form_id = this.$route.params.form_id
 
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}`
+      const url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${form_id}`
       this.axios.get(url)
       .then((response) => {
         this.form = response.data
@@ -240,13 +258,13 @@ export default {
     },
     delete_form() {
       if(!confirm('ホンマ？')) return
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.form._id}`
+      const url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.form._id}`
       this.axios.delete(url)
       .then(() => { this.$router.push({name: 'forms'}) })
       .catch((error) => console.log(error))
     },
     delete_response(response_index) {
-      let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.form._id}/responses/${response_index}`
+      const url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms/${this.form._id}/responses/${response_index}`
       this.axios.delete(url)
       .then(() => {
         this.form.responses.splice(response_index,1)
@@ -254,7 +272,7 @@ export default {
       .catch((error) => console.log(error))
     },
     format_date(date){
-      let options = {
+      const options = {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
@@ -262,19 +280,14 @@ export default {
       return new Date(date).toLocaleString('ja-JP',options)
     },
     excel_export(){
-      var workbook = XLSX.utils.book_new();
-      var ws1 = XLSX.utils.table_to_sheet(document.getElementById('responses_table'))
+      const workbook = XLSX.utils.book_new();
+      const ws1 = XLSX.utils.table_to_sheet(document.getElementById('export_table'))
       XLSX.utils.book_append_sheet(workbook, ws1, "Sheet1")
-      XLSX.writeFile(workbook, 'export.xlsx')
+      XLSX.writeFile(workbook, `${this.form.name}_responses.xlsx`)
 
     },
 
   },
-  computed: {
-    publishable_form_url() {
-      return `${window.location.origin}/form?id=${this.form._id}`
-    }
-  }
 }
 </script>
 
@@ -295,5 +308,9 @@ th, td {
 
 input[type="text"] {
   width: 100%;
+}
+
+#export_table {
+  display: none;
 }
 </style>

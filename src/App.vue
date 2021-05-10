@@ -1,43 +1,40 @@
 <template>
-  <div id="app">
-    <main>
-      <router-view/>
-    </main>
-
-  </div>
+  <AppTemplate :options="options"/>
 </template>
 
+<script>
+
+import AppTemplate from '@moreillon/vue_application_template'
+
+export default {
+  name: 'App',
+  components: {
+    AppTemplate,
+  },
+  data(){
+    return {
+      options: {
+        authenticate: true,
+        title: 'Questionnaire manager',
+        login_url: `${process.env.VUE_APP_AUTHENTICATION_API_URL}/login`,
+        identification_url: `${process.env.VUE_APP_AUTHENTICATION_API_URL}/whoami`,
+      }
+    }
+  },
+}
+</script>
+
+
 <style>
-* {
-  box-sizing: border-box;
-}
-body {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 
-  margin: 0;
 
-}
-
-#app {
-  display: flex;
-  justify-content: center;
-}
-main {
-  flex-grow: 1;
-  margin-left: 1em;
-  margin-right: 1em;
-  margin-bottom: 1em;
-  max-width: 800px;
-}
-
-a {
+main a {
+  font-weight: bold;
   color: #c00000;
   text-decoration: none;
 }
 
-a:hover {
+main a:hover {
   text-decoration: underline;
 }
 
