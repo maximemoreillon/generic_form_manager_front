@@ -37,7 +37,7 @@ export default {
       let url = `${process.env.VUE_APP_GENERIC_FORM_MANAGER_API_URL}/forms`
       this.axios.post(url, {name: this.form_name})
       .then((response) => {
-        this.$router.push({name: 'form_dashboard', query: {id: response.data.insertedId}})
+        this.$router.push({name: 'form_dashboard', params: {form_id: response.data.insertedId}})
       })
       .catch((error) => console.log(error))
     }
